@@ -36,84 +36,87 @@ function initMap() {
       };
 
 
-//Defines radius for goal
+      //Defines radius for goal
       var request = {
         location: pos,
         radius: '1000', // meters.
         types: ['restaurant']
       };
-    
+
       var service = new google.maps.places.PlacesService(map);
-      service.nearbySearch(request, function(placeArray) {
-        
+      service.nearbySearch(request, function (placeArray) {
+
         // for (let index = 0; index < placeArray.length && index < 1; index++) {
-          const place = placeArray[Math.floor(Math.random()*placeArray.length)];
+        const place = placeArray[Math.floor(Math.random() * placeArray.length)];
 
-          //Adding maker for goal
-          var image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
-          var marker = new google.maps.Marker({
-            position: place.geometry.location,
-            map: map,
-            title: place.name,
-            label: place.name,
-            icon: image
-          });
+        //Adding maker for goal
+        var image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
+        var marker = new google.maps.Marker({
+          position: place.geometry.location,
+          map: map,
+          title: place.name,
+          label: place.name,
+          icon: image
+        });
 
-
-          var infoWindowFlag = new google.maps.InfoWindow ({
-            content: "This flag is near you!"
-          })
-  
-          google.maps.event.addListener(marker, 'click', function() {
-            infoWindowFlag.open(map,marker);
-            console.log('hello');
-          });
-
-        // }
-
-        // var infoWindowFlag = new google.maps.InfoWindow ({
-        //   content: "This flag is near you!"
-        // })
-
-        // google.maps.event.addListener(marker, 'click', function() {
-        //   infoWindowFlag.open(map,marker);
-        //   console.log('ive been clicked')
-        // });
+        google.maps.event.addListener(marker, 'click', function () {
+          infoWindowFlag.open(map, marker);
           
-      });
+        });
 
-      infoWindow.setPosition(pos);
-      infoWindow.setContent('You are here!');
-      infoWindow.open(map);
-      map.setCenter(pos);
 
+        var contentString = '<div id="treasureCard" class="card" style="width: 10rem;">'+' <div class="card-body text-center">'+'<img src="assets/images/treasure.png" width="30" height="30" class="d-inline-block align-top" alt="treasure">'+'<br>'+'<br>'+'<h6 class="card-subtitle mb-2 text-muted"> Get this treasure now!</h6>'+'<p class="card-text">Points: 75</p>'+'</div>'+'</div>';
+        
+          
+        var infoWindowFlag = new google.maps.InfoWindow({
+          content: contentString
+        });
+          
+                  // }
+          
+        // var infoWindowFlag = new google.maps.InfoWindow ({
+                //   content: "This flag is near you!"
+                // })
+
+                // google.maps.event.addListener(marker, 'click', function() {
+                //   infoWindowFlag.open(map,marker);
+                //   console.log('ive been clicked')
+                // });
+
+              });
+        
+              infoWindow.setPosition(pos);
+              infoWindow.setContent('You are here!');
+              infoWindow.open(map);
+              map.setCenter(pos);
+        
     }, function () {
-      handleLocationError(true, infoWindow, map.getCenter());
-    });
+                handleLocationError(true, infoWindow, map.getCenter());
+              });
   } else {
-    // Browser doesn't support Geolocation
-    handleLocationError(false, infoWindow, map.getCenter());
-  }
-}
-
+                // Browser doesn't support Geolocation
+                handleLocationError(false, infoWindow, map.getCenter());
+              }
+            }
+            
 function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-  infoWindow.setPosition(pos);
-  infoWindow.setContent(browserHasGeolocation ?
-    'Error: The Geolocation service failed.' :
-    'Error: Your browser doesn\'t support geolocation.');
-  infoWindow.open(map);
-}
-
-firebase.auth().onAuthStateChanged(function(user) {
+                infoWindow.setPosition(pos);
+              infoWindow.setContent(browserHasGeolocation ?
+                'Error: The Geolocation service failed.' :
+                'Error: Your browser doesn\'t support geolocation.');
+              infoWindow.open(map);
+            }
+            
+firebase.auth().onAuthStateChanged(function (user) {
   if (user) {
-    //user signed in
-    console.log('sign in successful')
-    
-  } else {
-    //user is signed out
-    //TODO:send them to login page
-    window.location = 'login.html'
-  }
-})
+                //user signed in
+                console.log('sign in successful')
 
+              } else {
+                //user is signed out
+                //TODO:send them to login page
+                window.location = 'login.html'
+              }
+              })
+              
 // 4171538d8b0426ab188add84efb437bf5c591ae7
