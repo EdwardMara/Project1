@@ -40,7 +40,7 @@ function initMap() {
       var request = {
         location: pos,
         radius: '1000', // meters.
-        types: ['restaurants']
+        types: ['restaurant']
       };
     
       var service = new google.maps.places.PlacesService(map);
