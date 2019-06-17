@@ -1,3 +1,15 @@
+// Your web app's Firebase configuration
+var firebaseConfig = {
+  apiKey: "AIzaSyDTfSXIMQhASVUoBDVRF3o7p8Jeq3r9D9g",
+  authDomain: "augmented-rpg.firebaseapp.com",
+  databaseURL: "https://augmented-rpg.firebaseio.com",
+  projectId: "augmented-rpg",
+  storageBucket: "augmented-rpg.appspot.com",
+  messagingSenderId: "1076506960196",
+  appId: "1:1076506960196:web:3636ba353c7103f6"
+};
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
 
 // Note: This example requires that you consent to location sharing when
 // prompted by your browser. If you see the error "The Geolocation service
@@ -34,8 +46,8 @@ function initMap() {
       var service = new google.maps.places.PlacesService(map);
       service.nearbySearch(request, function(placeArray) {
         
-        for (let index = 0; index < placeArray.length && index < 5; index++) {
-          const place = placeArray[index];
+        // for (let index = 0; index < placeArray.length && index < 1; index++) {
+          const place = placeArray[Math.floor(Math.random()*placeArray.length)];
 
           //Adding maker for goal
           var image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
@@ -47,7 +59,6 @@ function initMap() {
             icon: image
           });
 
-          marker.setMap(map);
 
           var infoWindowFlag = new google.maps.InfoWindow ({
             content: "This flag is near you!"
@@ -58,7 +69,7 @@ function initMap() {
             console.log('hello');
           });
 
-        }
+        // }
 
         // var infoWindowFlag = new google.maps.InfoWindow ({
         //   content: "This flag is near you!"
@@ -93,6 +104,16 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
   infoWindow.open(map);
 }
 
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    //user signed in
+    console.log('sign in successful')
+    
+  } else {
+    //user is signed out
+    //TODO:send them to login page
+    window.location = 'login.html'
+  }
+})
 
-
-
+// 4171538d8b0426ab188add84efb437bf5c591ae7
