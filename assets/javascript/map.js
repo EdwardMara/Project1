@@ -46,8 +46,8 @@ function initMap() {
       var service = new google.maps.places.PlacesService(map);
       service.nearbySearch(request, function(placeArray) {
         
-        for (let index = 0; index < placeArray.length && index < 5; index++) {
-          const place = placeArray[index];
+        // for (let index = 0; index < placeArray.length && index < 1; index++) {
+          const place = placeArray[Math.floor(Math.random()*placeArray.length)];
 
           //Adding maker for goal
           var image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
@@ -59,7 +59,6 @@ function initMap() {
             icon: image
           });
 
-          marker.setMap(map);
 
           var infoWindowFlag = new google.maps.InfoWindow ({
             content: "This flag is near you!"
@@ -70,7 +69,7 @@ function initMap() {
             console.log('hello');
           });
 
-        }
+        // }
 
         // var infoWindowFlag = new google.maps.InfoWindow ({
         //   content: "This flag is near you!"
