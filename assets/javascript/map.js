@@ -101,7 +101,6 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
   infoWindow.open(map);
 }
 
-<<<<<<< HEAD
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
     //user signed in
@@ -113,5 +112,5 @@ firebase.auth().onAuthStateChanged(function(user) {
     window.location = 'login.html'
   }
 })
-=======
->>>>>>> 4171538d8b0426ab188add84efb437bf5c591ae7
+
+// 4171538d8b0426ab188add84efb437bf5c591ae7
