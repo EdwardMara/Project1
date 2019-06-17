@@ -54,3 +54,15 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
     'Error: Your browser doesn\'t support geolocation.');
   infoWindow.open(map);
 }
+
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    //user signed in
+    console.log('sign in successful')
+    
+  } else {
+    //user is signed out
+    //TODO:send them to login page
+    window.location = 'login.html'
+  }
+})
