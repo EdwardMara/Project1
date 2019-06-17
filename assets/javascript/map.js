@@ -1,3 +1,15 @@
+// Your web app's Firebase configuration
+var firebaseConfig = {
+  apiKey: "AIzaSyDTfSXIMQhASVUoBDVRF3o7p8Jeq3r9D9g",
+  authDomain: "augmented-rpg.firebaseapp.com",
+  databaseURL: "https://augmented-rpg.firebaseio.com",
+  projectId: "augmented-rpg",
+  storageBucket: "augmented-rpg.appspot.com",
+  messagingSenderId: "1076506960196",
+  appId: "1:1076506960196:web:3636ba353c7103f6"
+};
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
 
 // Note: This example requires that you consent to location sharing when
 // prompted by your browser. If you see the error "The Geolocation service
@@ -89,6 +101,17 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
   infoWindow.open(map);
 }
 
-
-
-
+<<<<<<< HEAD
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    //user signed in
+    console.log('sign in successful')
+    
+  } else {
+    //user is signed out
+    //TODO:send them to login page
+    window.location = 'login.html'
+  }
+})
+=======
+>>>>>>> 4171538d8b0426ab188add84efb437bf5c591ae7
