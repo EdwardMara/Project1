@@ -20,9 +20,10 @@ firebase.initializeApp(firebaseConfig);
 var map, infoWindow;
 
 function initMap() {
+
   map = new google.maps.Map(document.getElementById('mapContainer'), {
-    center: { lat: -34.397, lng: 150.644 },
-    zoom: 6
+    center: { lat: 47.6191119, lng: -122.31940750000001 },
+    zoom: 14
   });
   infoWindow = new google.maps.InfoWindow;
 
@@ -34,8 +35,53 @@ function initMap() {
         lng: position.coords.longitude
       };
 
+
+//Defines radius for goal
+      var request = {
+        location: pos,
+        radius: '1000', // meters.
+        types: ['restaurants']
+      };
+    
+      var service = new google.maps.places.PlacesService(map);
+      service.nearbySearch(request, function(placeArray) {
+
+        for (let index = 0; index < placeArray.length && index < 5; index++) {
+          const place = placeArray[index];
+
+          //Adding maker for goal
+          var image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
+          var marker = new google.maps.Marker({
+            position: place.geometry.location,
+            map: map,
+            title: place.name,
+            label: place.name,
+            icon: image
+          });
+  
+          marker.setMap(map);
+            
+        }
+
+      });
+
+
+      // Adding image instead of marker
+      // var image = 'http://freepngimg.com/thumb/treasure/14-2-treasure-png-picture.png';
+      // var beachMarker = new google.maps.Marker({
+      //   position: pos,
+      //   map: map,
+      //   icon: image
+      // });
+      // var image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
+      // var beachMarker = new google.maps.Marker({
+      //   position: pos,
+      //   map: map,
+      //   icon: image
+      // });
+
       infoWindow.setPosition(pos);
-      infoWindow.setContent('Location found.');
+      infoWindow.setContent('You are here!');
       infoWindow.open(map);
       map.setCenter(pos);
     }, function () {
@@ -55,6 +101,7 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
   infoWindow.open(map);
 }
 
+<<<<<<< HEAD
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
     //user signed in
@@ -66,3 +113,5 @@ firebase.auth().onAuthStateChanged(function(user) {
     window.location = 'login.html'
   }
 })
+=======
+>>>>>>> 4171538d8b0426ab188add84efb437bf5c591ae7
