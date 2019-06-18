@@ -10,11 +10,14 @@ var firebaseConfig = {
 };
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
+
 var database = firebase.database();
+
 // Note: This example requires that you consent to location sharing when
 // prompted by your browser. If you see the error "The Geolocation service
 // failed.", it means you probably did not give permission for the browser to
 // locate you.
+
 var map, infoWindow;
 function initMap() {
   map = new google.maps.Map(document.getElementById('mapContainer'), {
@@ -24,7 +27,7 @@ function initMap() {
   infoWindow = new google.maps.InfoWindow;
   // Try HTML5 geolocation.
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function (position) {
+    navigator.geolocation.watchPosition(function (position) {
       var pos = {
         lat: position.coords.latitude,
         lng: position.coords.longitude
@@ -41,6 +44,7 @@ function initMap() {
         // infoWindow.setContent('You are here!');
         infoWindow.open(map);
       });
+
       var contentStringProfile = '<div id="profileCard" class="card" style="width: 10rem;">' + '<div class="card-body text-center">' + '<img src="assets/images/pacman.png" width="45" height="30" class="d-inline-block align-top" alt="treasure">' + '<br>' + '<br>' + '<h6 class="card-subtitle mb-2 text-muted"> Your name</h6>' + '<p class="card-text">Points: 250</p>' + '</div>' + '</div>';
       var infoWindow = new google.maps.InfoWindow({
         content: contentStringProfile
@@ -77,6 +81,7 @@ function initMap() {
           });
         }
       });
+
     }, function () {
       handleLocationError(true, infoWindow, map.getCenter());
     });
@@ -92,7 +97,9 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
     'Error: Your browser doesn\'t support geolocation.');
   infoWindow.open(map);
 }
+
 var userId
+
 function writeUserData(userId, experience) {
   database.ref('users/' + userId).set({
     experience: experience
@@ -101,14 +108,31 @@ function writeUserData(userId, experience) {
 firebase.auth().onAuthStateChanged(function (user) {
   if (user) {
     //user signed in
-    console.log('sign in successful')
     userId = firebase.auth().currentUser.uid;
+
     console.log(userId);
     writeUserData(userId, 0);
+
   } else {
     //user is signed out
     //TODO:send them to login page
     window.location = 'login.html'
   }
+  database.ref('users/' + userId).on("value", function (snapshot) {
+    if (snapshot.val() === null) {
+      database.ref('users/' + userId).set({
+        experience: 0
+      })
+    }
+    if (snapshot.val().experience >= 0) {
+      currentXP = snapshot.val().experience;
+      console.log('we got here')
+    }
+    console.log(currentXP);
+
+  }, function (errorObject) {
+
+    console.log("The read failed: " + errorObject.code);
+  })
 })
 // 4171538d8b0426ab188add84efb437bf5c591ae7
