@@ -89,7 +89,7 @@ function initMap() {
           });
 
           const contentString = '<div id="treasureCard" class="card" style="width: 10rem;">' + ' <div class="card-body text-center">' + '<img src="assets/images/ghost.png" width="30" height="30" class="d-inline-block align-top" alt="treasure">' + '<br>' + '<br>' + '<h6 class="card-subtitle mb-2 text-muted"> Catch the ghost now!</h6>' + '<p class="card-text">Points: 75</p>' + '</div>' + '</div>';
-          
+
           const infoWindowFlag = new google.maps.InfoWindow({
             content: contentString
           });
@@ -119,7 +119,8 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
   infoWindow.open(map);
 }
 
-var userId
+var userId;
+var currentXP;
 
 function writeUserData(userId, experience) {
   database.ref('users/' + userId).set({
@@ -130,15 +131,29 @@ function writeUserData(userId, experience) {
 firebase.auth().onAuthStateChanged(function (user) {
   if (user) {
     //user signed in
-    console.log('sign in successful')
     userId = firebase.auth().currentUser.uid;
-    console.log(userId);
-    writeUserData(userId, 0);
+    
 
   } else {
     //user is signed out
     //TODO:send them to login page
     window.location = 'login.html'
   }
+  database.ref('users/' + userId).on("value", function (snapshot) {
+      if (snapshot.val() === null) {
+        database.ref('users/' + userId).set({
+          experience: 0
+        })
+      }
+      if (snapshot.val().experience >= 0) {
+        currentXP = snapshot.val().experience;
+        console.log('we got here')
+      }
+      console.log(currentXP);
+  
+  }, function (errorObject) {
+  
+    console.log("The read failed: " + errorObject.code);
+  })
 })
 // 4171538d8b0426ab188add84efb437bf5c591ae7
