@@ -25,7 +25,7 @@ function initMap() {
 
   map = new google.maps.Map(document.getElementById('mapContainer'), {
     center: { lat: 47.6191119, lng: -122.31940750000001 },
-    zoom: 14
+    zoom: 15
   });
   infoWindow = new google.maps.InfoWindow;
 
@@ -37,6 +37,28 @@ function initMap() {
         lng: position.coords.longitude
       };
 
+      var profileMarker = new google.maps.Marker({
+        position: pos,
+        map: map,
+      });
+      map.setCenter(pos);
+
+      //Adds on click function to the user's location marker
+      google.maps.event.addListener(profileMarker, 'click', function () {
+        infoWindow.open(map, profileMarker);
+        infoWindow.setPosition(pos);
+        // infoWindow.setContent('You are here!');
+        infoWindow.open(map);
+      });
+
+
+      var contentStringProfile = '<div id="profileCard" class="card" style="width: 10rem;">' + '<div class="card-body text-center">' + '<img src="assets/images/pacman.png" width="45" height="30" class="d-inline-block align-top" alt="treasure">' + '<br>' + '<br>' + '<h6 class="card-subtitle mb-2 text-muted"> Your name</h6>' + '<p class="card-text">Points: 250</p>' + '</div>' + '</div>';
+
+
+      var infoWindow = new google.maps.InfoWindow({
+        content: contentStringProfile
+      });
+
 
       //Defines radius for goal
       var request = {
@@ -44,6 +66,7 @@ function initMap() {
         radius: '1000', // meters.
         types: ['restaurant']
       };
+
 
       var service = new google.maps.places.PlacesService(map);
       service.nearbySearch(request, function (placeArray) {
@@ -66,6 +89,10 @@ function initMap() {
 
         });
 
+        for (let i = 0; i < 3; i++) {
+          const index = Math.floor(Math.random() * placeArray.length);
+          // Remove the element of the array on the index provided.
+          const place = placeArray.splice(index, 1)[0];
 
         var contentString = '<div id="treasureCard" class="card" style="width: 10rem;">' + ' <div class="card-body text-center">' + '<img src="assets/images/treasure.png" width="30" height="30" class="d-inline-block align-top" alt="treasure">' + '<br>' + '<br>' + '<h6 class="card-subtitle mb-2 text-muted"> Get this treasure now!</h6>' + '<p class="card-text">Points: 75</p>' + '</div>' + '</div>';
 
@@ -124,6 +151,7 @@ firebase.auth().onAuthStateChanged(function (user) {
     userId = firebase.auth().currentUser.uid;
     console.log(userId);
     writeUserData(userId, 0);
+
   } else {
     //user is signed out
     //TODO:send them to login page
