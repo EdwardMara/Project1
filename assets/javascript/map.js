@@ -86,7 +86,7 @@ function initMap() {
             icon: image
           });
 
-          const contentString = '<div id="treasureCard" class="card" style="width: 10rem;">' + ' <div class="card-body text-center">' + '<img src="assets/images/ghost.png" width="30" height="30" class="d-inline-block align-top" alt="treasure">' + '<br>' + '<br>' + '<h6 class="card-subtitle mb-2 text-muted"> Get this treasure now!</h6>' + '<p class="card-text">Points: 75</p>' + '</div>' + '</div>';
+          const contentString = '<div id="treasureCard" class="card" style="width: 10rem;">' + ' <div class="card-body text-center">' + '<img src="assets/images/ghost.png" width="30" height="30" class="d-inline-block align-top" alt="treasure">' + '<br>' + '<br>' + '<h6 class="card-subtitle mb-2 text-muted"> Catch the ghost now!</h6>' + '<p class="card-text">Points: 75</p>' + '</div>' + '</div>';
           
           const infoWindowFlag = new google.maps.InfoWindow({
             content: contentString
