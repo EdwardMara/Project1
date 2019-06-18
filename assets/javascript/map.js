@@ -18,7 +18,7 @@ var database = firebase.database();
 // failed.", it means you probably did not give permission for the browser to
 // locate you.
 
-
+var goalsUp = false;
 var map, infoWindow;
 
 function initMap() {
@@ -31,7 +31,7 @@ function initMap() {
 
   // Try HTML5 geolocation.
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function (position) {
+    navigator.geolocation.watchPosition(function (position) {
       var pos = {
         lat: position.coords.latitude,
         lng: position.coords.longitude
@@ -51,55 +51,62 @@ function initMap() {
         infoWindow.open(map);
       });
 
-
-      var contentStringProfile = '<div id="profileCard" class="card" style="width: 10rem;">' + '<div class="card-body text-center">' + '<img src="assets/images/pacman.png" width="45" height="30" class="d-inline-block align-top" alt="treasure">' + '<br>' + '<br>' + '<h6 class="card-subtitle mb-2 text-muted"> Your name</h6>' + '<p class="card-text">Points: 250</p>' + '</div>' + '</div>';
-
-
-      var infoWindow = new google.maps.InfoWindow({
-        content: contentStringProfile
-      });
+      function setGoals() {
+        goalsUp = true;
 
 
-      //Defines radius for goal
-      var request = {
-        location: pos,
-        radius: '1000', // meters.
-        types: ['restaurant']
+        var contentStringProfile = '<div id="profileCard" class="card" style="width: 10rem;">' + '<div class="card-body text-center">' + '<img src="assets/images/pacman.png" width="45" height="30" class="d-inline-block align-top" alt="treasure">' + '<br>' + '<br>' + '<h6 class="card-subtitle mb-2 text-muted"> Your name</h6>' + '<p class="card-text">Points: 250</p>' + '</div>' + '</div>';
+
+
+        var infoWindow = new google.maps.InfoWindow({
+          content: contentStringProfile
+        });
+
+
+        //Defines radius for goal
+        var request = {
+          location: pos,
+          radius: '1000', // meters.
+          types: ['restaurant']
+        };
+
+
+        var service = new google.maps.places.PlacesService(map);
+        service.nearbySearch(request, function (placeArray) {
+
+          //For loop to grab place from array, changing var for 'const' to make cards appear in every location 
+
+          for (let i = 0; i < 3; i++) {
+            const index = Math.floor(Math.random() * placeArray.length);
+            // Remove the element of the array on the index provided.
+            const place = placeArray.splice(index, 1)[0];
+
+            // Adding goal marker
+            const image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
+            const marker = new google.maps.Marker({
+              position: place.geometry.location,
+              map: map,
+              title: place.name,
+              label: place.name,
+              icon: image
+            });
+
+            const contentString = '<div id="treasureCard" class="card" style="width: 10rem;">' + ' <div class="card-body text-center">' + '<img src="assets/images/ghost.png" width="30" height="30" class="d-inline-block align-top" alt="treasure">' + '<br>' + '<br>' + '<h6 class="card-subtitle mb-2 text-muted"> Catch the ghost now!</h6>' + '<p class="card-text">Points: 75</p>' + '</div>' + '</div>';
+
+            const infoWindowFlag = new google.maps.InfoWindow({
+              content: contentString
+            });
+
+            google.maps.event.addListener(marker, 'click', function () {
+              infoWindowFlag.open(map, marker);
+
+            });
+          }
+        });
       };
-
-
-      var service = new google.maps.places.PlacesService(map);
-      service.nearbySearch(request, function (placeArray) {
-
-        //For loop to grab place from array, changing var for 'const' to make cards appear in every location 
-
-        for (let i = 0; i < 3; i++) {
-          const index = Math.floor(Math.random() * placeArray.length);
-          // Remove the element of the array on the index provided.
-          const place = placeArray.splice(index, 1)[0];
-
-          // Adding goal marker
-          const image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
-          const marker = new google.maps.Marker({
-            position: place.geometry.location,
-            map: map,
-            title: place.name,
-            label: place.name,
-            icon: image
-          });
-
-          const contentString = '<div id="treasureCard" class="card" style="width: 10rem;">' + ' <div class="card-body text-center">' + '<img src="assets/images/ghost.png" width="30" height="30" class="d-inline-block align-top" alt="treasure">' + '<br>' + '<br>' + '<h6 class="card-subtitle mb-2 text-muted"> Catch the ghost now!</h6>' + '<p class="card-text">Points: 75</p>' + '</div>' + '</div>';
-
-          const infoWindowFlag = new google.maps.InfoWindow({
-            content: contentString
-          });
-
-          google.maps.event.addListener(marker, 'click', function () {
-            infoWindowFlag.open(map, marker);
-
-          });
-        }
-      });
+      if(!goalsUp){
+        setGoals();
+      }
 
 
     }, function () {
@@ -132,7 +139,7 @@ firebase.auth().onAuthStateChanged(function (user) {
   if (user) {
     //user signed in
     userId = firebase.auth().currentUser.uid;
-    
+
 
   } else {
     //user is signed out
@@ -140,19 +147,19 @@ firebase.auth().onAuthStateChanged(function (user) {
     window.location = 'login.html'
   }
   database.ref('users/' + userId).on("value", function (snapshot) {
-      if (snapshot.val() === null) {
-        database.ref('users/' + userId).set({
-          experience: 0
-        })
-      }
-      if (snapshot.val().experience >= 0) {
-        currentXP = snapshot.val().experience;
-        console.log('we got here')
-      }
-      console.log(currentXP);
-  
+    if (snapshot.val() === null) {
+      database.ref('users/' + userId).set({
+        experience: 0
+      })
+    }
+    if (snapshot.val().experience >= 0) {
+      currentXP = snapshot.val().experience;
+      console.log('we got here')
+    }
+    console.log(currentXP);
+
   }, function (errorObject) {
-  
+
     console.log("The read failed: " + errorObject.code);
   })
 })
