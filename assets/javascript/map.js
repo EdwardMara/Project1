@@ -117,10 +117,21 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
   infoWindow.open(map);
 }
 
+var userId
+
+function writeUserData(userId, experience) {
+  database.ref('users/' + userId).set({
+    experience: experience
+  })
+}
+
 firebase.auth().onAuthStateChanged(function (user) {
   if (user) {
     //user signed in
     console.log('sign in successful')
+    userId = firebase.auth().currentUser.uid;
+    console.log(userId);
+    writeUserData(userId, 0);
 
   } else {
     //user is signed out
@@ -128,5 +139,4 @@ firebase.auth().onAuthStateChanged(function (user) {
     window.location = 'login.html'
   }
 })
-
 // 4171538d8b0426ab188add84efb437bf5c591ae7
