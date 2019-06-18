@@ -18,17 +18,13 @@ var database = firebase.database();
 // failed.", it means you probably did not give permission for the browser to
 // locate you.
 
-var goalsUp = false;
 var map, infoWindow;
-
 function initMap() {
-
   map = new google.maps.Map(document.getElementById('mapContainer'), {
     center: { lat: 47.6191119, lng: -122.31940750000001 },
     zoom: 15
   });
   infoWindow = new google.maps.InfoWindow;
-
   // Try HTML5 geolocation.
   if (navigator.geolocation) {
     navigator.geolocation.watchPosition(function (position) {
@@ -36,13 +32,11 @@ function initMap() {
         lat: position.coords.latitude,
         lng: position.coords.longitude
       };
-
       var profileMarker = new google.maps.Marker({
         position: pos,
         map: map,
       });
       map.setCenter(pos);
-
       //Adds on click function to the user's location marker
       google.maps.event.addListener(profileMarker, 'click', function () {
         infoWindow.open(map, profileMarker);
@@ -51,63 +45,42 @@ function initMap() {
         infoWindow.open(map);
       });
 
-      function setGoals() {
-        goalsUp = true;
-
-
-        var contentStringProfile = '<div id="profileCard" class="card" style="width: 10rem;">' + '<div class="card-body text-center">' + '<img src="assets/images/pacman.png" width="45" height="30" class="d-inline-block align-top" alt="treasure">' + '<br>' + '<br>' + '<h6 class="card-subtitle mb-2 text-muted"> Your name</h6>' + '<p class="card-text">Points: 250</p>' + '</div>' + '</div>';
-
-
-        var infoWindow = new google.maps.InfoWindow({
-          content: contentStringProfile
-        });
-
-
-        //Defines radius for goal
-        var request = {
-          location: pos,
-          radius: '1000', // meters.
-          types: ['restaurant']
-        };
-
-
-        var service = new google.maps.places.PlacesService(map);
-        service.nearbySearch(request, function (placeArray) {
-
-          //For loop to grab place from array, changing var for 'const' to make cards appear in every location 
-
-          for (let i = 0; i < 3; i++) {
-            const index = Math.floor(Math.random() * placeArray.length);
-            // Remove the element of the array on the index provided.
-            const place = placeArray.splice(index, 1)[0];
-
-            // Adding goal marker
-            const image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
-            const marker = new google.maps.Marker({
-              position: place.geometry.location,
-              map: map,
-              title: place.name,
-              label: place.name,
-              icon: image
-            });
-
-            const contentString = '<div id="treasureCard" class="card" style="width: 10rem;">' + ' <div class="card-body text-center">' + '<img src="assets/images/ghost.png" width="30" height="30" class="d-inline-block align-top" alt="treasure">' + '<br>' + '<br>' + '<h6 class="card-subtitle mb-2 text-muted"> Catch the ghost now!</h6>' + '<p class="card-text">Points: 75</p>' + '</div>' + '</div>';
-
-            const infoWindowFlag = new google.maps.InfoWindow({
-              content: contentString
-            });
-
-            google.maps.event.addListener(marker, 'click', function () {
-              infoWindowFlag.open(map, marker);
-
-            });
-          }
-        });
+      var contentStringProfile = '<div id="profileCard" class="card" style="width: 10rem;">' + '<div class="card-body text-center">' + '<img src="assets/images/pacman.png" width="45" height="30" class="d-inline-block align-top" alt="treasure">' + '<br>' + '<br>' + '<h6 class="card-subtitle mb-2 text-muted"> Your name</h6>' + '<p class="card-text">Points: 250</p>' + '</div>' + '</div>';
+      var infoWindow = new google.maps.InfoWindow({
+        content: contentStringProfile
+      });
+      //Defines radius for goal
+      var request = {
+        location: pos,
+        radius: '1000', // meters.
+        types: ['restaurant']
       };
-      if(!goalsUp){
-        setGoals();
-      }
-
+      var service = new google.maps.places.PlacesService(map);
+      service.nearbySearch(request, function (placeArray) {
+        //For loop to grab place from array, changing var for 'const' to make cards appear in every location 
+        for (let i = 0; i < 3; i++) {
+          const index = Math.floor(Math.random() * placeArray.length);
+          // Remove the element of the array on the index provided.
+          const place = placeArray.splice(index, 1)[0];
+          // Adding goal marker
+          const image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
+          const marker = new google.maps.Marker({
+            position: place.geometry.location,
+            map: map,
+            title: place.name,
+            label: place.name,
+            icon: image
+          });
+          const contentString = '<div id="treasureCard" class="card" style="width: 10rem;">' + ' <div class="card-body text-center">' + '<img src="assets/images/ghost.png" width="30" height="30" class="d-inline-block align-top" alt="treasure">' + '<br>' + '<br>' + '<h6 class="card-subtitle mb-2 text-muted"> Catch the ghost now!</h6>' + '<p class="card-text">Points: 75</p>' + '</div>' + '</div>';
+          
+          const infoWindowFlag = new google.maps.InfoWindow({
+            content: contentString
+          });
+          google.maps.event.addListener(marker, 'click', function () {
+            infoWindowFlag.open(map, marker);
+          });
+        }
+      });
 
     }, function () {
       handleLocationError(true, infoWindow, map.getCenter());
@@ -117,7 +90,6 @@ function initMap() {
     handleLocationError(false, infoWindow, map.getCenter());
   }
 }
-
 function handleLocationError(browserHasGeolocation, infoWindow, pos) {
   infoWindow.setPosition(pos);
   infoWindow.setContent(browserHasGeolocation ?
@@ -126,20 +98,20 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
   infoWindow.open(map);
 }
 
-var userId;
-var currentXP;
+var userId
 
 function writeUserData(userId, experience) {
   database.ref('users/' + userId).set({
     experience: experience
   })
 }
-
 firebase.auth().onAuthStateChanged(function (user) {
   if (user) {
     //user signed in
     userId = firebase.auth().currentUser.uid;
 
+    console.log(userId);
+    writeUserData(userId, 0);
 
   } else {
     //user is signed out

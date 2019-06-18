@@ -7,18 +7,19 @@
   -ms-user-select: none;
   user-select: none;
 }
-
 @media (min-width: 768px) {
   .bd-placeholder-img-lg {
     font-size: 3.5rem;
   }
 }
-
 .icon-white {
   color: white;
 }
-
 #mapContainer {
   height: 90vh;
-  width: 100vw;
+  width: 100%;
+}
+.jumbotron {
+  background-image: url("../images/background.jpg");
+  background-size: cover;
 }
