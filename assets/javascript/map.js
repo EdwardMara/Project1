@@ -16,6 +16,8 @@ firebase.initializeApp(firebaseConfig);
 // failed.", it means you probably did not give permission for the browser to
 // locate you.
 
+let database = firebase.database();
+
 
 var map, infoWindow;
 
@@ -61,62 +63,76 @@ function initMap() {
 
         google.maps.event.addListener(marker, 'click', function () {
           infoWindowFlag.open(map, marker);
-          
+
         });
 
 
-        var contentString = '<div id="treasureCard" class="card" style="width: 10rem;">'+' <div class="card-body text-center">'+'<img src="assets/images/treasure.png" width="30" height="30" class="d-inline-block align-top" alt="treasure">'+'<br>'+'<br>'+'<h6 class="card-subtitle mb-2 text-muted"> Get this treasure now!</h6>'+'<p class="card-text">Points: 75</p>'+'</div>'+'</div>';
-        
-          
+        var contentString = '<div id="treasureCard" class="card" style="width: 10rem;">' + ' <div class="card-body text-center">' + '<img src="assets/images/treasure.png" width="30" height="30" class="d-inline-block align-top" alt="treasure">' + '<br>' + '<br>' + '<h6 class="card-subtitle mb-2 text-muted"> Get this treasure now!</h6>' + '<p class="card-text">Points: 75</p>' + '</div>' + '</div>';
+
+
         var infoWindowFlag = new google.maps.InfoWindow({
           content: contentString
         });
-          
-                  // }
-          
+
+        // }
+
         // var infoWindowFlag = new google.maps.InfoWindow ({
-                //   content: "This flag is near you!"
-                // })
+        //   content: "This flag is near you!"
+        // })
 
-                // google.maps.event.addListener(marker, 'click', function() {
-                //   infoWindowFlag.open(map,marker);
-                //   console.log('ive been clicked')
-                // });
+        // google.maps.event.addListener(marker, 'click', function() {
+        //   infoWindowFlag.open(map,marker);
+        //   console.log('ive been clicked')
+        // });
 
-              });
-        
-              infoWindow.setPosition(pos);
-              infoWindow.setContent('You are here!');
-              infoWindow.open(map);
-              map.setCenter(pos);
-        
+      });
+
+      infoWindow.setPosition(pos);
+      infoWindow.setContent('You are here!');
+      infoWindow.open(map);
+      map.setCenter(pos);
+
     }, function () {
-                handleLocationError(true, infoWindow, map.getCenter());
-              });
+      handleLocationError(true, infoWindow, map.getCenter());
+    });
   } else {
-                // Browser doesn't support Geolocation
-                handleLocationError(false, infoWindow, map.getCenter());
-              }
-            }
-            
+    // Browser doesn't support Geolocation
+    handleLocationError(false, infoWindow, map.getCenter());
+  }
+}
+
 function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-                infoWindow.setPosition(pos);
-              infoWindow.setContent(browserHasGeolocation ?
-                'Error: The Geolocation service failed.' :
-                'Error: Your browser doesn\'t support geolocation.');
-              infoWindow.open(map);
-            }
-            
+  infoWindow.setPosition(pos);
+  infoWindow.setContent(browserHasGeolocation ?
+    'Error: The Geolocation service failed.' :
+    'Error: Your browser doesn\'t support geolocation.');
+  infoWindow.open(map);
+}
+
+var userId
+
+function writeUserData(userId, experience) {
+  database.ref('users/' + userId).set({
+    experience: experience
+  })
+}
+
 firebase.auth().onAuthStateChanged(function (user) {
   if (user) {
-                //user signed in
-                console.log('sign in successful')
+    //user signed in
+    console.log('sign in successful')
+    userId = firebase.auth().currentUser.uid;
+    console.log(userId);
+    writeUserData(userId, 0);
+  } else {
+    //user is signed out
+    //TODO:send them to login page
+    window.location = 'login.html'
+  }
+})
 
-              } else {
-                //user is signed out
-                //TODO:send them to login page
-                window.location = 'login.html'
-              }
-              })
-              
+
+
+
+
 // 4171538d8b0426ab188add84efb437bf5c591ae7
