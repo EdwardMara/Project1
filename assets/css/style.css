@@ -7,19 +7,17 @@
   -ms-user-select: none;
   user-select: none;
 }
-
 @media (min-width: 768px) {
   .bd-placeholder-img-lg {
     font-size: 3.5rem;
   }
 }
-
 .icon-white {
   color: white;
 }
-
 #mapContainer {
   height: 90vh;
+<<<<<<< HEAD
   width: 100vw;
 }
 
@@ -65,3 +63,11 @@ p{
 p:hover span{
   display:block;
 }
+=======
+  width: 100%;
+}
+.jumbotron {
+  background-image: url("../images/background.jpg");
+  background-size: cover;
+}
+>>>>>>> 17b6370b9f78840fdb3a4ee3db975382846a07d9
