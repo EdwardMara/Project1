@@ -67,7 +67,15 @@ p:hover span{
   width: 100%;
 }
 .jumbotron {
-  background-image: url("../images/background.jpg");
+  background-image: url("../images/background.jpeg");
   background-size: cover;
 }
+<<<<<<< HEAD
 >>>>>>> 17b6370b9f78840fdb3a4ee3db975382846a07d9
+=======
+
+.jumbotext {
+color: white;
+letter-spacing: 5px;
+}
+>>>>>>> b81f3555d3a4494d752804680bc82953fa1a2b2a
