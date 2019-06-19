@@ -22,8 +22,11 @@ JavaScript
 jQuery for DOM manipulation
 
 HTML
+
 CSS
+
 Bootstrap
+
 Firebase
 
 ## New Technology Used
