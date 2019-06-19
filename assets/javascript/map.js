@@ -63,7 +63,7 @@ function initMap() {
 
       var contentStringProfile = '<div id="profileCard" class="card" style="width: 10rem;">' + '<div class="card-body text-center">' + '<img src="assets/images/pacman.png" width="45" height="30" class="d-inline-block align-top" alt="treasure">' + '<br>' + '<br>' + '<h6 class="card-subtitle mb-2 text-muted"> Your name</h6>' + '<p class="card-text">Points: 250</p>' + '</div>' + '</div>';
 
-
+      //TODO: Move outside watchPosition function and update setPosition(pos)
       var infoWindow = new google.maps.InfoWindow({
         content: contentStringProfile
       });
@@ -89,7 +89,8 @@ function initMap() {
             const place = placeArray.splice(index, 1)[0];
 
             // Adding goal marker
-            const image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
+            //TODO: try inserting raw html
+            const image = 'href://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
             const marker = new google.maps.Marker({
               position: place.geometry.location,
               map: map,
