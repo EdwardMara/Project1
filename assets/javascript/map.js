@@ -98,8 +98,7 @@ function initMap() {
       google.maps.event.addListener(profileMarker, 'click', function () {
         infoWindow.open(map, profileMarker);
         infoWindow.setPosition(pos);
-        // infoWindow.setContent('You are here!');
-        infoWindow.open(map);
+    
       });
 
 
