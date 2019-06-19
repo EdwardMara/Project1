@@ -71,11 +71,13 @@ function initMap() {
 
   // Try HTML5 geolocation.
   if (navigator.geolocation) {
+    var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/'; 
     var profileMarker = new google.maps.Marker({
       position: null,
       map: map,
+      icon: iconBase + 'hiker_maps.png' 
+    })
 
-    });
     navigator.geolocation.watchPosition(function (position) {
       var pos = {
         lat: position.coords.latitude,
@@ -96,7 +98,7 @@ function initMap() {
         infoWindow.open(map, profileMarker);
         infoWindow.setPosition(pos);
         // infoWindow.setContent('You are here!');
-        infoWindow.open(map);
+        
       });
 
 
