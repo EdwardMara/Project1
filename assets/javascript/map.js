@@ -17,6 +17,45 @@ var database = firebase.database();
 // prompted by your browser. If you see the error "The Geolocation service
 // failed.", it means you probably did not give permission for the browser to
 // locate you.
+var userId;
+var currentXP;
+
+//takes a number and updates the database
+function addExperience(experience) {
+  database.ref('users/' + userId).set({
+    experience: experience
+  })
+}
+
+firebase.auth().onAuthStateChanged(function (user) {
+  if (user) {
+    //user signed in
+    userId = firebase.auth().currentUser.uid;
+
+
+  } else {
+    //user is signed out
+    //TODO:send them to login page
+    window.location = 'login.html'
+  }
+  database.ref('users/' + userId).on("value", function (snapshot) {
+    if (snapshot.val() === null) {
+      database.ref('users/' + userId).set({
+        experience: 0
+      })
+    }
+    if (snapshot.val().experience >= 0) {
+      currentXP = snapshot.val().experience;
+      console.log('we got here');
+      $('#profPoints').text(currentXP);
+      $('#cardPoints').text(currentXP);
+    }
+
+  }, function (errorObject) {
+
+    console.log("The read failed: " + errorObject.code);
+  })
+})
 
 
 var map, infoWindow;
@@ -61,7 +100,7 @@ function initMap() {
       });
 
 
-      var contentStringProfile = '<div id="profileCard" class="card" style="width: 10rem;">' + '<div class="card-body text-center">' + '<img src="assets/images/pacman.png" width="45" height="30" class="d-inline-block align-top" alt="treasure">' + '<br>' + '<br>' + '<h6 class="card-subtitle mb-2 text-muted"> Your name</h6>' + '<p class="card-text">Points: 250</p>' + '</div>' + '</div>';
+      var contentStringProfile = '<div id="profileCard" class="card" style="width: 10rem;">' + '<div class="card-body text-center">' + '<img src="assets/images/pacman.png" width="45" height="30" class="d-inline-block align-top" alt="treasure">' + '<br>' + '<br>' + '<h6 class="card-subtitle mb-2 text-muted"> Your name</h6>' + '<p class="card-text">Points:'+ "<span id='cardPoints'>" + currentXP + "</span>" +'</p>'+'<a href="profile.html" class="card-link">Go to my profile</a>' + '</div>' + '</div>';
 
 
       var infoWindow = new google.maps.InfoWindow({
@@ -135,41 +174,5 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
   infoWindow.open(map);
 }
 
-var userId;
-var currentXP;
 
-function writeUserData(userId, experience) {
-  database.ref('users/' + userId).set({
-    experience: experience
-  })
-}
-
-firebase.auth().onAuthStateChanged(function (user) {
-  if (user) {
-    //user signed in
-    userId = firebase.auth().currentUser.uid;
-
-
-  } else {
-    //user is signed out
-    //TODO:send them to login page
-    window.location = 'login.html'
-  }
-  database.ref('users/' + userId).on("value", function (snapshot) {
-    if (snapshot.val() === null) {
-      database.ref('users/' + userId).set({
-        experience: 0
-      })
-    }
-    if (snapshot.val().experience >= 0) {
-      currentXP = snapshot.val().experience;
-      console.log('we got here')
-    }
-    console.log(currentXP);
-
-  }, function (errorObject) {
-
-    console.log("The read failed: " + errorObject.code);
-  })
-})
 // 4171538d8b0426ab188add84efb437bf5c591ae7
