@@ -1,0 +1,18 @@
+h1 {
+    font-family: 'Bangers', cursive;
+    font-size: 100px;
+    text-align: center;
+    color:tan;
+    border-inline-color: black;
+}
+
+body {
+    /* background: url(../Project1/assets/images/map.jpg); */
+
+}
+
+form {
+    text-align: center;
+    font-size: 20px;
+}
+
