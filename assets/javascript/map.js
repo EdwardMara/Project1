@@ -55,6 +55,8 @@ firebase.auth().onAuthStateChanged(function (user) {
 
 var map, infoWindow;
 var goalUp = false;
+let lastKnownUserLocation = undefined;
+let simulationTarget = undefined;
 
 function initMap() {
   map = new google.maps.Map(document.getElementById('mapContainer'), {
@@ -65,8 +67,9 @@ function initMap() {
 
   // Try HTML5 geolocation.
   if (navigator.geolocation) {
-    navigator.geolocation.watchPosition(function(position) {
-      reactToNewLocation(position);
+    navigator.geolocation.watchPosition(function (position) {
+      lastKnownUserLocation = position.coords;
+      reactToNewLocation(position.coords.latitude, position.coords.longitude);
     }, function () {
       handleLocationError(true, infoWindow, map.getCenter());
     });
@@ -76,10 +79,29 @@ function initMap() {
   }
 }
 
-function reactToNewLocation(position) {
+// Simulation starts when space key is pressed
+$(document).on("keypress", function (e) {
+  //e.which checks if space was clicked
+  if (e.which === 32) {
+    let currentLat = lastKnownUserLocation.latitude;
+    let currentLong = lastKnownUserLocation.longitude;
+    // Grabs coords of user's location and target
+    const targetLat = simulationTarget.lat();
+    const targetLong = simulationTarget.lng();
+    // For loop to check percentage of distance traveled towards the goal
+    const iterations = 100;
+    for (let i = 0; i < iterations; i++) {
+      let newLat = currentLat + (targetLat - currentLat) / iterations * i;
+      let newLong = currentLong + (targetLong - currentLong) / iterations * i;
+      reactToNewLocation(newLat, newLong);
+    }
+  }
+});
+
+function reactToNewLocation(currentLat, currentLong) {
   var pos = {
-    lat: position.coords.latitude,
-    lng: position.coords.longitude
+    lat: currentLat,
+    lng: currentLong
   };
 
   var profileMarker = new google.maps.Marker({
@@ -97,7 +119,7 @@ function reactToNewLocation(position) {
     infoWindow.open(map);
   });
 
-  var contentStringProfile = '<div id="profileCard" class="card" style="width: 10rem;">' + '<div class="card-body text-center">' + '<img src="assets/images/pacman.png" width="45" height="30" class="d-inline-block align-top" alt="treasure">' + '<br>' + '<br>' + '<h6 class="card-subtitle mb-2 text-muted"> Your name</h6>' + '<p class="card-text">Points:'+ "<span id='cardPoints'>" + currentXP + "</span>" +'</p>'+'<a href="profile.html" class="card-link">Go to my profile</a>' + '</div>' + '</div>';
+  var contentStringProfile = '<div id="profileCard" class="card" style="width: 10rem;">' + '<div class="card-body text-center">' + '<img src="assets/images/pacman.png" width="45" height="30" class="d-inline-block align-top" alt="treasure">' + '<br>' + '<br>' + '<h6 class="card-subtitle mb-2 text-muted"> Your name</h6>' + '<p class="card-text">Points:' + "<span id='cardPoints'>" + currentXP + "</span>" + '</p>' + '<a href="profile.html" class="card-link">Go to my profile</a>' + '</div>' + '</div>';
 
   var infoWindow = new google.maps.InfoWindow({
     content: contentStringProfile
@@ -145,6 +167,9 @@ function setGoals(pos) {
       google.maps.event.addListener(marker, 'click', function () {
         infoWindowFlag.open(map, marker);
       });
+
+      // Setting the target for the simulation to the last random location selected
+      simulationTarget = place.geometry.location;
     }
   });
 };
