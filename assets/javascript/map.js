@@ -114,11 +114,12 @@ setTimeout(
         let distance = getDistance(pos, quests[i]);
         console.log(distance);
         console.log(points[i]);
-        if(distance < 600 && quests.length === 3) {
+        if(distance < 75 && quests.length === 3) {
           console.log('ive been triggered');
            addExperience(points[i]);
            goalUp = false;
            quests = [];
+           window.location = 'profile.html';
         }
       }
       // var profileMarker = new google.maps.Marker({
