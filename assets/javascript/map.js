@@ -24,15 +24,13 @@ var currentXP;
 function addExperience(experience) {
   database.ref('users/' + userId).set({
     experience: experience
-  })
+  });
 }
 
 firebase.auth().onAuthStateChanged(function (user) {
   if (user) {
     //user signed in
     userId = firebase.auth().currentUser.uid;
-
-
   } else {
     //user is signed out
     //TODO:send them to login page
@@ -50,13 +48,10 @@ firebase.auth().onAuthStateChanged(function (user) {
       $('#profPoints').text(currentXP);
       $('#cardPoints').text(currentXP);
     }
-
   }, function (errorObject) {
-
     console.log("The read failed: " + errorObject.code);
-  })
-})
-
+  });
+});
 
 var map, infoWindow;
 var goalUp = false;
@@ -74,7 +69,6 @@ function initMap() {
     var profileMarker = new google.maps.Marker({
       position: null,
       map: map,
-
     });
     navigator.geolocation.watchPosition(function (position) {
       var pos = {
@@ -83,12 +77,7 @@ function initMap() {
       };
 
       profileMarker.setPosition(pos);
-      
 
-      // var profileMarker = new google.maps.Marker({
-      //   position: pos,
-      //   map: map,
-      // });
       map.setCenter(pos);
 
       //Adds on click function to the user's location marker
@@ -99,63 +88,15 @@ function initMap() {
         infoWindow.open(map);
       });
 
-
       var contentStringProfile = '<div id="profileCard" class="card" style="width: 10rem;">' + '<div class="card-body text-center">' + '<img src="assets/images/pacman.png" width="45" height="30" class="d-inline-block align-top" alt="treasure">' + '<br>' + '<br>' + '<h6 class="card-subtitle mb-2 text-muted"> Your name</h6>' + '<p class="card-text">Points:'+ "<span id='cardPoints'>" + currentXP + "</span>" +'</p>'+'<a href="profile.html" class="card-link">Go to my profile</a>' + '</div>' + '</div>';
-
 
       var infoWindow = new google.maps.InfoWindow({
         content: contentStringProfile
       });
 
-
-      function setGoals() {
-        goalUp = true;
-        //Defines radius for goal
-        var request = {
-          location: pos,
-          radius: '1000', // meters.
-          types: ['restaurant']
-        };
-
-        var service = new google.maps.places.PlacesService(map);
-        service.nearbySearch(request, function (placeArray) {
-
-          //For loop to grab place from array, changing var for 'const' to make cards appear in every location 
-
-          for (let i = 0; i < 3; i++) {
-            const index = Math.floor(Math.random() * placeArray.length);
-            // Remove the element of the array on the index provided.
-            const place = placeArray.splice(index, 1)[0];
-
-            // Adding goal marker
-            const image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
-            const marker = new google.maps.Marker({
-              position: place.geometry.location,
-              map: map,
-              title: place.name,
-              label: place.name,
-              icon: image
-            });
-
-            const contentString = '<div id="treasureCard" class="card" style="width: 10rem;">' + ' <div class="card-body text-center">' + '<img src="assets/images/ghost.png" width="30" height="30" class="d-inline-block align-top" alt="treasure">' + '<br>' + '<br>' + '<h6 class="card-subtitle mb-2 text-muted"> Catch the ghost now!</h6>' + '<p class="card-text">Points: 75</p>' + '</div>' + '</div>';
-
-            const infoWindowFlag = new google.maps.InfoWindow({
-              content: contentString
-            });
-
-            google.maps.event.addListener(marker, 'click', function () {
-              infoWindowFlag.open(map, marker);
-
-            });
-          }
-        });
-      };
-
-      if(!goalUp){
+      if (!goalUp) {
         setGoals();
       }
-
-
 
     }, function () {
       handleLocationError(true, infoWindow, map.getCenter());
@@ -166,6 +107,47 @@ function initMap() {
   }
 }
 
+function setGoals() {
+  goalUp = true;
+  //Defines radius for goal
+  var request = {
+    location: pos,
+    radius: '1000', // meters.
+    types: ['restaurant']
+  };
+
+  var service = new google.maps.places.PlacesService(map);
+  service.nearbySearch(request, function (placeArray) {
+
+    // For loop to grab place from array, changing var for 'const' to make cards appear in every location 
+    for (let i = 0; i < 3; i++) {
+      const index = Math.floor(Math.random() * placeArray.length);
+      // Remove the element of the array on the index provided.
+      const place = placeArray.splice(index, 1)[0];
+
+      // Adding goal marker
+      const image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
+      const marker = new google.maps.Marker({
+        position: place.geometry.location,
+        map: map,
+        title: place.name,
+        label: place.name,
+        icon: image
+      });
+
+      const contentString = '<div id="treasureCard" class="card" style="width: 10rem;">' + ' <div class="card-body text-center">' + '<img src="assets/images/ghost.png" width="30" height="30" class="d-inline-block align-top" alt="treasure">' + '<br>' + '<br>' + '<h6 class="card-subtitle mb-2 text-muted"> Catch the ghost now!</h6>' + '<p class="card-text">Points: 75</p>' + '</div>' + '</div>';
+
+      const infoWindowFlag = new google.maps.InfoWindow({
+        content: contentString
+      });
+
+      google.maps.event.addListener(marker, 'click', function () {
+        infoWindowFlag.open(map, marker);
+      });
+    }
+  });
+};
+
 function handleLocationError(browserHasGeolocation, infoWindow, pos) {
   infoWindow.setPosition(pos);
   infoWindow.setContent(browserHasGeolocation ?
@@ -173,6 +155,3 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
     'Error: Your browser doesn\'t support geolocation.');
   infoWindow.open(map);
 }
-
-
-// 4171538d8b0426ab188add84efb437bf5c591ae7
