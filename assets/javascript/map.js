@@ -23,7 +23,6 @@ let quests = [];
 
 //takes a number and updates the database
 function addExperience(xp) {
-  console.log(xp)
   let xpadder = currentXP + xp;
   database.ref('users/' + userId).set({
     experience: xpadder
@@ -111,13 +110,13 @@ setTimeout(
 
       profileMarker.setPosition(pos);
 
-      // for (let i = 0; i < quests.length; i++) {
-      //   if(getDistance(pos, quests[i]) < 25 && quests.length === 3) {
-      //     console.log(points[i]);
-      //      addExperience(points[i]);
-      //      goalUp = false;
-      //   }
-      // }
+      for (let i = 0; i < quests.length; i++) {
+        if(getDistance(pos, quests[i]) < 50 && quests.length === 3) {
+           addExperience(points[i]);
+           goalUp = false;
+           quests = [];
+        }
+      }
       // var profileMarker = new google.maps.Marker({
       //   position: pos,
       //   map: map,
@@ -126,7 +125,6 @@ setTimeout(
 
       //Adds on click function to the user's location marker
       google.maps.event.addListener(profileMarker, 'click', function () {
-        console.log('currentxp:',currentXP);
         $('#cardPoints').text(currentXP);
         infoWindow.open(map, profileMarker);
         infoWindow.setPosition(pos);
@@ -166,10 +164,15 @@ setTimeout(
               map: map,
               title: place.name,
               label: place.name,
-              icon: image
+              icon: image,
+              lat: place.geometry.location.lat(),
+              lng: place.geometry.location.lng()
             });
 
-            quests.push(place.geometry.location);
+            quests.push({
+              lat: marker.lat,
+              lng: marker.lng
+            });
 
             const contentString = '<div id="treasureCard" class="card" style="width: 10rem;">' + ' <div class="card-body text-center">' + '<img src="assets/images/ghost.png" width="30" height="30" class="d-inline-block align-top" alt="treasure">' + '<br>' + '<br>' + '<h6 class="card-subtitle mb-2 text-muted"> Catch the ghost now!</h6>' + '<p class="card-text">'+points[i]+' points'+'</p>' + '</div>' + '</div>';
 
