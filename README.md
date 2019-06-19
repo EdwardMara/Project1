@@ -12,7 +12,7 @@ Try new things
 ### Live Link
 https://edwardmara.github.io/Project1/login.html
 
-## Technologies Used
+## Technology/Framework Used
 Google Maps API
 JavaScript
 jQuery for DOM manipulation
@@ -20,6 +20,8 @@ HTML
 CSS
 Bootstrap
 Firebase
+
+## New Technology Used
 SCSS
 
 ### Authors
