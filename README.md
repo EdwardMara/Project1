@@ -6,20 +6,30 @@ Sign up using your email, and once you're all sign up your quest will appear. Th
 
 ### Motivation
 Be active
+
 Meet new people
+
 Try new things
 
 ### Live Link
 https://edwardmara.github.io/Project1/login.html
 
-## Technologies Used
+## Technology/Framework Used
 Google Maps API
+
 JavaScript
+
 jQuery for DOM manipulation
+
 HTML
+
 CSS
+
 Bootstrap
+
 Firebase
+
+## New Technology Used
 SCSS
 
 ### Authors
