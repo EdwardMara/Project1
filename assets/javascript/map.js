@@ -78,6 +78,11 @@ function initMap() {
       icon: iconBase + 'hiker_maps.png'
 
     });
+    
+    var infoWindow = new google.maps.InfoWindow({
+      content: contentStringProfile
+    });
+
     navigator.geolocation.watchPosition(function (position) {
       var pos = {
         lat: position.coords.latitude,
@@ -105,9 +110,6 @@ function initMap() {
       var contentStringProfile = '<div id="profileCard" class="card" style="width: 10rem;">' + '<div class="card-body text-center">' + '<img src="assets/images/pacman.png" width="45" height="30" class="d-inline-block align-top" alt="treasure">' + '<br>' + '<br>' + '<h6 class="card-subtitle mb-2 text-muted"> Your name</h6>' + '<p class="card-text">Points:' + "<span id='cardPoints'>" + currentXP + "</span>" + '</p>' + '<a href="profile.html" class="card-link">Go to my profile</a>' + '</div>' + '</div>';
 
 
-      var infoWindow = new google.maps.InfoWindow({
-        content: contentStringProfile
-      });
 
 
       function setGoals() {
