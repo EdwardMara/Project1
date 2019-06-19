@@ -130,6 +130,7 @@ function initMap() {
             const index = Math.floor(Math.random() * placeArray.length);
             // Remove the element of the array on the index provided.
             const place = placeArray.splice(index, 1)[0];
+            const points = ["50","75","100"];
 
             // Adding goal marker
             const image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
@@ -141,7 +142,7 @@ function initMap() {
               icon: image
             });
 
-            const contentString = '<div id="treasureCard" class="card" style="width: 10rem;">' + ' <div class="card-body text-center">' + '<img src="assets/images/ghost.png" width="30" height="30" class="d-inline-block align-top" alt="treasure">' + '<br>' + '<br>' + '<h6 class="card-subtitle mb-2 text-muted"> Catch the ghost now!</h6>' + '<p class="card-text">Points: 75</p>' + '</div>' + '</div>';
+            const contentString = '<div id="treasureCard" class="card" style="width: 10rem;">' + ' <div class="card-body text-center">' + '<img src="assets/images/ghost.png" width="30" height="30" class="d-inline-block align-top" alt="treasure">' + '<br>' + '<br>' + '<h6 class="card-subtitle mb-2 text-muted"> Catch the ghost now!</h6>' + '<p class="card-text">'+points[i]+'</p>' + '</div>' + '</div>';
 
             const infoWindowFlag = new google.maps.InfoWindow({
               content: contentString
