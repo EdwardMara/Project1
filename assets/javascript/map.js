@@ -57,7 +57,6 @@ var map, infoWindow;
 var goalUp = false;
 
 function initMap() {
-
   map = new google.maps.Map(document.getElementById('mapContainer'), {
     center: { lat: 47.6191119, lng: -122.31940750000001 },
     zoom: 15
@@ -66,38 +65,8 @@ function initMap() {
 
   // Try HTML5 geolocation.
   if (navigator.geolocation) {
-    var profileMarker = new google.maps.Marker({
-      position: null,
-      map: map,
-    });
-    navigator.geolocation.watchPosition(function (position) {
-      var pos = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude
-      };
-
-      profileMarker.setPosition(pos);
-
-      map.setCenter(pos);
-
-      //Adds on click function to the user's location marker
-      google.maps.event.addListener(profileMarker, 'click', function () {
-        infoWindow.open(map, profileMarker);
-        infoWindow.setPosition(pos);
-        // infoWindow.setContent('You are here!');
-        infoWindow.open(map);
-      });
-
-      var contentStringProfile = '<div id="profileCard" class="card" style="width: 10rem;">' + '<div class="card-body text-center">' + '<img src="assets/images/pacman.png" width="45" height="30" class="d-inline-block align-top" alt="treasure">' + '<br>' + '<br>' + '<h6 class="card-subtitle mb-2 text-muted"> Your name</h6>' + '<p class="card-text">Points:'+ "<span id='cardPoints'>" + currentXP + "</span>" +'</p>'+'<a href="profile.html" class="card-link">Go to my profile</a>' + '</div>' + '</div>';
-
-      var infoWindow = new google.maps.InfoWindow({
-        content: contentStringProfile
-      });
-
-      if (!goalUp) {
-        setGoals();
-      }
-
+    navigator.geolocation.watchPosition(function(position) {
+      reactToNewLocation(position);
     }, function () {
       handleLocationError(true, infoWindow, map.getCenter());
     });
@@ -107,7 +76,39 @@ function initMap() {
   }
 }
 
-function setGoals() {
+function reactToNewLocation(position) {
+  var pos = {
+    lat: position.coords.latitude,
+    lng: position.coords.longitude
+  };
+
+  var profileMarker = new google.maps.Marker({
+    position: pos,
+    map: map,
+  });
+
+  map.setCenter(pos);
+
+  //Adds on click function to the user's location marker
+  google.maps.event.addListener(profileMarker, 'click', function () {
+    infoWindow.open(map, profileMarker);
+    infoWindow.setPosition(pos);
+    // infoWindow.setContent('You are here!');
+    infoWindow.open(map);
+  });
+
+  var contentStringProfile = '<div id="profileCard" class="card" style="width: 10rem;">' + '<div class="card-body text-center">' + '<img src="assets/images/pacman.png" width="45" height="30" class="d-inline-block align-top" alt="treasure">' + '<br>' + '<br>' + '<h6 class="card-subtitle mb-2 text-muted"> Your name</h6>' + '<p class="card-text">Points:'+ "<span id='cardPoints'>" + currentXP + "</span>" +'</p>'+'<a href="profile.html" class="card-link">Go to my profile</a>' + '</div>' + '</div>';
+
+  var infoWindow = new google.maps.InfoWindow({
+    content: contentStringProfile
+  });
+
+  if (!goalUp) {
+    setGoals(pos);
+  }
+}
+
+function setGoals(pos) {
   goalUp = true;
   //Defines radius for goal
   var request = {
