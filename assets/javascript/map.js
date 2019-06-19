@@ -1,4 +1,3 @@
-// Your web app's Firebase configuration
 var firebaseConfig = {
   apiKey: "AIzaSyDTfSXIMQhASVUoBDVRF3o7p8Jeq3r9D9g",
   authDomain: "augmented-rpg.firebaseapp.com",
@@ -71,9 +70,11 @@ function initMap() {
 
   // Try HTML5 geolocation.
   if (navigator.geolocation) {
+    var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/'; //J
     var profileMarker = new google.maps.Marker({
       position: null,
       map: map,
+      icon: iconBase + 'hiker_maps.png' //J
 
     });
     navigator.geolocation.watchPosition(function (position) {
@@ -83,6 +84,14 @@ function initMap() {
       };
 
       profileMarker.setPosition(pos);
+
+
+  //  var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
+  //  var marker = new google.maps.Marker({
+  //   position: myLatLng,
+  //   map: map,
+  //   icon: iconBase + 'parking_lot_maps.png'
+  // });
       
 
       // var profileMarker = new google.maps.Marker({
@@ -175,5 +184,3 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
   infoWindow.open(map);
 }
 
-
-// 4171538d8b0426ab188add84efb437bf5c591ae7
