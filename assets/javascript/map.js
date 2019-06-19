@@ -66,7 +66,17 @@ function initMap() {
   infoWindow = new google.maps.InfoWindow;
 
   // Try HTML5 geolocation.
+ 
   if (navigator.geolocation) {
+
+    var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/'; //J
+    var profileMarker = new google.maps.Marker({
+      position: null,
+      map: map,
+      icon: iconBase + 'hiker_maps.png' //J
+
+    });
+
     navigator.geolocation.watchPosition(function (position) {
       lastKnownUserLocation = position.coords;
       reactToNewLocation(position.coords.latitude, position.coords.longitude);
