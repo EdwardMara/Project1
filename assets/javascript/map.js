@@ -19,13 +19,31 @@ var database = firebase.database();
 // locate you.
 var userId;
 var currentXP;
+let quests = [];
 
 //takes a number and updates the database
-function addExperience(experience) {
+function addExperience(xp) {
+  let xpadder = currentXP + xp;
   database.ref('users/' + userId).set({
-    experience: experience
+    experience: xpadder
   })
 }
+
+var rad = function(x) {
+  return x * Math.PI / 180;
+};
+
+var getDistance = function(p1, p2) {
+  var R = 6378137; // Earth’s mean radius in meter
+  var dLat = rad(p2.lat - p1.lat);
+  var dLong = rad(p2.lng - p1.lng);
+  var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(rad(p1.lat)) * Math.cos(rad(p2.lat)) *
+    Math.sin(dLong / 2) * Math.sin(dLong / 2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  var d = R * c;
+  return d; // returns the distance in meter
+};
 
 firebase.auth().onAuthStateChanged(function (user) {
   if (user) {
@@ -34,8 +52,7 @@ firebase.auth().onAuthStateChanged(function (user) {
 
 
   } else {
-    //user is signed out
-    //TODO:send them to login page
+
     window.location = 'login.html'
   }
   database.ref('users/' + userId).on("value", function (snapshot) {
@@ -48,6 +65,7 @@ firebase.auth().onAuthStateChanged(function (user) {
       currentXP = snapshot.val().experience;
       console.log('we got here');
       $('#profPoints').text(currentXP);
+      console.log(currentXP);
       $('#cardPoints').text(currentXP);
     }
 
@@ -60,9 +78,9 @@ firebase.auth().onAuthStateChanged(function (user) {
 
 var map, infoWindow;
 var goalUp = false;
-
-function initMap() {
-
+setTimeout(
+  function initMap() {
+    
   map = new google.maps.Map(document.getElementById('mapContainer'), {
     center: { lat: 47.6191119, lng: -122.31940750000001 },
     zoom: 15
@@ -79,9 +97,9 @@ function initMap() {
       
     });
     
-    var contentStringProfile = '<div id="profileCard" class="card" style="width: 10rem;">' + '<div class="card-body text-center">' + '<img src="assets/images/pacman.png" width="45" height="30" class="d-inline-block align-top" alt="treasure">' + '<br>' + '<br>' + '<h6 class="card-subtitle mb-2 text-muted"> Your name</h6>' + '<p class="card-text">Points:' + "<span id='cardPoints'>" + currentXP + "</span>" + '</p>' + '<a href="profile.html" class="card-link">Go to my profile</a>' + '</div>' + '</div>';
+    var contentStringProfile = '<div id="profileCard" class="card" style="width: 10rem;">' + '<div class="card-body text-center">' + '<img src="assets/images/pacman.png" width="45" height="30" class="d-inline-block align-top" alt="treasure">' + '<br>' + '<br>' + '<h6 class="card-subtitle mb-2 text-muted"> Your name</h6>' + '<p class="card-text">Points: ' + "<span id='cardPoints'>" + currentXP + "</span>" + '</p>' + '<a href="profile.html" class="card-link">Go to my profile</a>' + '</div>' + '</div>';
     var infoWindow = new google.maps.InfoWindow({
-      content: contentStringProfile
+      content: '<div id="profileCard" class="card" style="width: 10rem;">' + '<div class="card-body text-center">' + '<img src="assets/images/pacman.png" width="45" height="30" class="d-inline-block align-top" alt="treasure">' + '<br>' + '<br>' + '<h6 class="card-subtitle mb-2 text-muted"> Your name</h6>' + '<p class="card-text">Points: ' + "<span id='cardPoints'>" + currentXP + "</span>" + '</p>' + '<a href="profile.html" class="card-link">Go to my profile</a>' + '</div>' + '</div>'
     });
 
     navigator.geolocation.watchPosition(function (position) {
@@ -92,7 +110,13 @@ function initMap() {
 
       profileMarker.setPosition(pos);
 
-
+      for (let i = 0; i < quests.length; i++) {
+        if(getDistance(pos, quests[i]) < 50 && quests.length === 3) {
+           addExperience(points[i]);
+           goalUp = false;
+           quests = [];
+        }
+      }
       // var profileMarker = new google.maps.Marker({
       //   position: pos,
       //   map: map,
@@ -101,6 +125,7 @@ function initMap() {
 
       //Adds on click function to the user's location marker
       google.maps.event.addListener(profileMarker, 'click', function () {
+        $('#cardPoints').text(currentXP);
         infoWindow.open(map, profileMarker);
         infoWindow.setPosition(pos);
         // infoWindow.setContent('You are here!');
@@ -130,6 +155,7 @@ function initMap() {
             const index = Math.floor(Math.random() * placeArray.length);
             // Remove the element of the array on the index provided.
             const place = placeArray.splice(index, 1)[0];
+            const points = [50,75,100];
 
             // Adding goal marker
             const image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
@@ -138,17 +164,26 @@ function initMap() {
               map: map,
               title: place.name,
               label: place.name,
-              icon: image
+              icon: image,
+              lat: place.geometry.location.lat(),
+              lng: place.geometry.location.lng()
             });
 
-            const contentString = '<div id="treasureCard" class="card" style="width: 10rem;">' + ' <div class="card-body text-center">' + '<img src="assets/images/ghost.png" width="30" height="30" class="d-inline-block align-top" alt="treasure">' + '<br>' + '<br>' + '<h6 class="card-subtitle mb-2 text-muted"> Catch the ghost now!</h6>' + '<p class="card-text">Points: 75</p>' + '</div>' + '</div>';
+            quests.push({
+              lat: marker.lat,
+              lng: marker.lng
+            });
+
+            const contentString = '<div id="treasureCard" class="card" style="width: 10rem;">' + ' <div class="card-body text-center">' + '<img src="assets/images/ghost.png" width="30" height="30" class="d-inline-block align-top" alt="treasure">' + '<br>' + '<br>' + '<h6 class="card-subtitle mb-2 text-muted"> Catch the ghost now!</h6>' + '<p class="card-text">'+points[i]+' points'+'</p>' + '</div>' + '</div>';
 
             const infoWindowFlag = new google.maps.InfoWindow({
               content: contentString
             });
 
             google.maps.event.addListener(marker, 'click', function () {
+              $('#cardPoints').text(currentXP);
               infoWindowFlag.open(map, marker);
+            
 
             });
           }
@@ -168,7 +203,7 @@ function initMap() {
     // Browser doesn't support Geolocation
     handleLocationError(false, infoWindow, map.getCenter());
   }
-}
+},1000)
 
 function handleLocationError(browserHasGeolocation, infoWindow, pos) {
   infoWindow.setPosition(pos);
