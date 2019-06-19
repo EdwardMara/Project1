@@ -75,7 +75,7 @@ firebase.auth().onAuthStateChanged(function (user) {
   })
 })
 
-
+const points = [50,75,100];
 var map, infoWindow;
 var goalUp = false;
 setTimeout(
@@ -111,7 +111,11 @@ setTimeout(
       profileMarker.setPosition(pos);
 
       for (let i = 0; i < quests.length; i++) {
-        if(getDistance(pos, quests[i]) < 50 && quests.length === 3) {
+        let distance = getDistance(pos, quests[i]);
+        console.log(distance);
+        console.log(points[i]);
+        if(distance < 600 && quests.length === 3) {
+          console.log('ive been triggered');
            addExperience(points[i]);
            goalUp = false;
            quests = [];
@@ -155,7 +159,7 @@ setTimeout(
             const index = Math.floor(Math.random() * placeArray.length);
             // Remove the element of the array on the index provided.
             const place = placeArray.splice(index, 1)[0];
-            const points = [50,75,100];
+
 
             // Adding goal marker
             const image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
