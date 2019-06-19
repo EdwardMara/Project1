@@ -71,9 +71,11 @@ function initMap() {
 
   // Try HTML5 geolocation.
   if (navigator.geolocation) {
+    var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
     var profileMarker = new google.maps.Marker({
       position: null,
       map: map,
+      icon: iconBase + 'hiker_maps.png'
 
     });
     navigator.geolocation.watchPosition(function (position) {
@@ -83,7 +85,7 @@ function initMap() {
       };
 
       profileMarker.setPosition(pos);
-      
+
 
       // var profileMarker = new google.maps.Marker({
       //   position: pos,
@@ -96,11 +98,11 @@ function initMap() {
         infoWindow.open(map, profileMarker);
         infoWindow.setPosition(pos);
         // infoWindow.setContent('You are here!');
-        infoWindow.open(map);
+        // infoWindow.open(map);
       });
 
 
-      var contentStringProfile = '<div id="profileCard" class="card" style="width: 10rem;">' + '<div class="card-body text-center">' + '<img src="assets/images/pacman.png" width="45" height="30" class="d-inline-block align-top" alt="treasure">' + '<br>' + '<br>' + '<h6 class="card-subtitle mb-2 text-muted"> Your name</h6>' + '<p class="card-text">Points:'+ "<span id='cardPoints'>" + currentXP + "</span>" +'</p>'+'<a href="profile.html" class="card-link">Go to my profile</a>' + '</div>' + '</div>';
+      var contentStringProfile = '<div id="profileCard" class="card" style="width: 10rem;">' + '<div class="card-body text-center">' + '<img src="assets/images/pacman.png" width="45" height="30" class="d-inline-block align-top" alt="treasure">' + '<br>' + '<br>' + '<h6 class="card-subtitle mb-2 text-muted"> Your name</h6>' + '<p class="card-text">Points:' + "<span id='cardPoints'>" + currentXP + "</span>" + '</p>' + '<a href="profile.html" class="card-link">Go to my profile</a>' + '</div>' + '</div>';
 
 
       var infoWindow = new google.maps.InfoWindow({
@@ -151,7 +153,7 @@ function initMap() {
         });
       };
 
-      if(!goalUp){
+      if (!goalUp) {
         setGoals();
       }
 
@@ -175,4 +177,3 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
 }
 
 
-// 4171538d8b0426ab188add84efb437bf5c591ae7
