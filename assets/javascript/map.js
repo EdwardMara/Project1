@@ -29,10 +29,12 @@ function addExperience(xp) {
   })
 }
 
+// convert to radians
 var rad = function(x) {
   return x * Math.PI / 180;
 };
 
+// finds the distance between to points on a sphere in this case earth
 var getDistance = function(p1, p2) {
   var R = 6378137; // Earth’s mean radius in meter
   var dLat = rad(p2.lat - p1.lat);
@@ -45,6 +47,7 @@ var getDistance = function(p1, p2) {
   return d; // returns the distance in meter
 };
 
+// firebase authentication code
 firebase.auth().onAuthStateChanged(function (user) {
   if (user) {
     //user signed in
@@ -52,16 +55,19 @@ firebase.auth().onAuthStateChanged(function (user) {
 
 
   } else {
-
+    // redirect them to the login page
     window.location = 'login.html'
   }
+  // check their current experience
   database.ref('users/' + userId).on("value", function (snapshot) {
     if (snapshot.val() === null) {
+      // if they don't have any set to 0
       database.ref('users/' + userId).set({
         experience: 0
       })
     }
     if (snapshot.val().experience >= 0) {
+      // replace the text on their profile with their exprience
       currentXP = snapshot.val().experience;
       console.log('we got here');
       $('#profPoints').text(currentXP);
@@ -70,7 +76,7 @@ firebase.auth().onAuthStateChanged(function (user) {
     }
 
   }, function (errorObject) {
-
+    // gives error code
     console.log("The read failed: " + errorObject.code);
   })
 })
@@ -78,9 +84,10 @@ firebase.auth().onAuthStateChanged(function (user) {
 const points = [50,75,100];
 var map, infoWindow;
 var goalUp = false;
+// wait 1 second
 setTimeout(
   function initMap() {
-    
+  // make a map
   map = new google.maps.Map(document.getElementById('mapContainer'), {
     center: { lat: 47.6191119, lng: -122.31940750000001 },
     zoom: 15
@@ -97,11 +104,13 @@ setTimeout(
       
     });
     
+    // profile and quest info bubbles
     var contentStringProfile = '<div id="profileCard" class="card" style="width: 10rem;">' + '<div class="card-body text-center">' + '<img src="assets/images/pacman.png" width="45" height="30" class="d-inline-block align-top" alt="treasure">' + '<br>' + '<br>' + '<h6 class="card-subtitle mb-2 text-muted"> Profile</h6>' + '<p class="card-text">Points: ' + "<span id='cardPoints'>" + currentXP + "</span>" + '</p>' + '<a href="profile.html" class="card-link">Go to my profile</a>' + '</div>' + '</div>';
     var infoWindow = new google.maps.InfoWindow({
       content: '<div id="profileCard" class="card" style="width: 10rem;">' + '<div class="card-body text-center">' + '<img src="assets/images/pacman.png" width="45" height="30" class="d-inline-block align-top" alt="treasure">' + '<br>' + '<br>' + '<h6 class="card-subtitle mb-2 text-muted"> Profile</h6>' + '<p class="card-text">Points: ' + "<span id='cardPoints'>" + currentXP + "</span>" + '</p>' + '<a href="profile.html" class="card-link">Go to my profile</a>' + '</div>' + '</div>'
     });
 
+    // check current location
     navigator.geolocation.watchPosition(function (position) {
       var pos = {
         lat: position.coords.latitude,
@@ -141,7 +150,7 @@ setTimeout(
 
 
 
-
+      // Create goal flags
       function setGoals() {
         goalUp = true;
         //Defines radius for goal
@@ -184,7 +193,8 @@ setTimeout(
             const infoWindowFlag = new google.maps.InfoWindow({
               content: contentString
             });
-
+            
+            // shows information when clicked
             google.maps.event.addListener(marker, 'click', function () {
               $('#cardPoints').text(currentXP);
               infoWindowFlag.open(map, marker);

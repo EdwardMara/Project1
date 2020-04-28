@@ -19,19 +19,20 @@ var firebaseConfig = {
         //user signed in
         console.log('sign in successful')
         window.location = 'index.html'
-        //TODO:send them to map page
+        //send them to map page
       } else {
         //user is signed out
       }
   })
 
+  // logic for sign up button
   $('#signUp').on('click', function (event) {
     event.preventDefault()
     let emailExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     let email = $('#email').val();
     let password = $('#password').val();
 
-
+    // creates a profile if it passes the tests
     if (emailExp.test(email) && password.length > 0) {
         firebase.auth().createUserWithEmailAndPassword(email, password).catch(function (error) {
             // Handle Errors here.
@@ -44,12 +45,13 @@ var firebaseConfig = {
     }
 });
 
+// logic for sign in
 $('#signIn').on('click', function (event) {
     event.preventDefault()
     let email = $('#email').val();
     let password = $('#password').val();
 
-
+    // checks types email and pass with firebase
     firebase.auth().signInWithEmailAndPassword(email, password).catch(function (error) {
         // Handle Errors here.
         var errorCode = error.code;
